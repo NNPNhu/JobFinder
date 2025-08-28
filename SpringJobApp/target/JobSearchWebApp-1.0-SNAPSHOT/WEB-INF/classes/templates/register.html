@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký - Hệ thống việc làm bán thời gian</title>
+    <!-- Tích hợp Bootstrap CSS từ CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSS tùy chỉnh -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <script>
+        // Hàm hiển thị/ẩn các trường dành cho EMPLOYER
+        function toggleEmployerFields() {
+            const role = document.getElementById("role").value;
+            const employerFields = document.getElementById("employerFields");
+            employerFields.style.display = role === "EMPLOYER" ? "block" : "none";
+        }
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Đăng ký</h2>
+        <!-- Hiển thị thông báo lỗi nếu có -->
+        <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+        <!-- Form đăng ký, gửi đến endpoint /register với phương thức POST -->
+        <form th:action="@{/register}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <!-- Các trường thông tin người dùng -->
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Họ</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                <!-- Trường bắt buộc để lưu vào bảng user -->
+            </div>
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Tên</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                <!-- Trường bắt buộc để lưu vào bảng user -->
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+                <!-- Trường bắt buộc, đảm bảo email duy nhất trong bảng user -->
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Số điện thoại</label>
+                <input type="text" class="form-control" id="phone" name="phone">
+                <!-- Trường không bắt buộc -->
+            </div>
+            <div class="mb-3">
+                <label for="username" class="form-label">Tên đăng nhập</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+                <!-- Trường bắt buộc, đảm bảo username duy nhất trong bảng user -->
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+                <!-- Trường bắt buộc để lưu vào bảng user -->
+            </div>
+            <div class="mb-3">
+                <label for="role" class="form-label">Vai trò</label>
+                <select class="form-select" id="role" name="role" onchange="toggleEmployerFields()" required>
+                    <option value="CANDIDATE">Ứng viên</option>
+                    <option value="EMPLOYER">Nhà tuyển dụng</option>
+                </select>
+                <!-- Cho phép người dùng chọn vai trò, quyết định quyền truy cập -->
+            </div>
+            <div class="mb-3">
+                <label for="avatar" class="form-label">Ảnh đại diện</label>
+                <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*" required>
+                <!-- Ảnh bắt buộc để lưu vào trường avatar trong bảng user -->
+            </div>
+            <!-- Các trường dành riêng cho EMPLOYER -->
+            <div id="employerFields" style="display:none;">
+                <div class="mb-3">
+                    <label for="companyName" class="form-label">Tên công ty</label>
+                    <input type="text" class="form-control" id="companyName" name="companyName">
+                    <!-- Bắt buộc cho EMPLOYER để lưu vào bảng company -->
+                </div>
+                <div class="mb-3">
+                    <label for="taxCode" class="form-label">Mã số thuế</label>
+                    <input type="text" class="form-control" id="taxCode" name="taxCode">
+                    <!-- Bắt buộc để xác minh công ty, lưu vào bảng company -->
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Mô tả công ty</label>
+                    <textarea class="form-control" id="description" name="description"></textarea>
+                    <!-- Không bắt buộc, lưu vào bảng company -->
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" id="address" name="address">
+                    <!-- Không bắt buộc, lưu vào bảng company -->
+                </div>
+                <div class="mb-3">
+                    <label for="website" class="form-label">Website</label>
+                    <input type="url" class="form-control" id="website" name="website">
+                    <!-- Không bắt buộc, lưu vào bảng company -->
+                </div>
+                <div class="mb-3">
+                    <label for="image1" class="form-label">Ảnh môi trường làm việc 1</label>
+                    <input type="file" class="form-control" id="image1" name="image1" accept="image/*">
+                    <!-- Ảnh bắt buộc để ADMIN xét duyệt, lưu vào bảng company -->
+                </div>
+                <div class="mb-3">
+                    <label for="image2" class="form-label">Ảnh môi trường làm việc 2</label>
+                    <input type="file" class="form-control" id="image2" name="image2" accept="image/*">
+                    <!-- Ảnh bắt buộc để ADMIN xét duyệt, lưu vào bảng company -->
+                </div>
+                <div class="mb-3">
+                    <label for="image3" class="form-label">Ảnh môi trường làm việc 3</label>
+                    <input type="file" class="form-control" id="image3" name="image3" accept="image/*">
+                    <!-- Ảnh bắt buộc để ADMIN xét duyệt, lưu vào bảng company -->
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Đăng ký</button>
+        </form>
+    </div>
+    <!-- Tích hợp Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Kích hoạt validation phía client của Bootstrap
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+</body>
+</html>

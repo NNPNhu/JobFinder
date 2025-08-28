@@ -1,0 +1,44 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Đơn ứng tuyển</title>
+    <th:block th:replace="base :: styles"></th:block>
+</head>
+<body>
+    <div th:replace="base::header"></div>
+
+    <main class="container">
+        <!--<div th:replace="base :: header"></div>-->
+        <h1 class="text-center text-info mt-1">ỨNG TUYỂN</h1>
+        <form  method="post" th:action="@{/addapplication}" th:object="${jobapplication}" enctype="multipart/form-data">
+
+            <div class="mb-3 mt-3">
+                <label for="coverLetter" class="form-label">Thư giới thiệu: </label>
+                <input type="text" class="form-control" id="cover_letter" placeholder="Thư giới thiệu" th:field="*{coverLetter}"  />
+            </div>
+
+            <div class="mb-3 mt-3">
+                <label for="resumeLink" class="form-label">Tải CV của bạn </label>
+                <input type="file" class="form-control" th:field="*{file}"  />
+                <img th:if="${jobapplication.resumeLink != null}" th:src="${jobapplication.resumeLink}" width="200" />
+            </div>
+            <div class="mb-3 mt-3">
+                <input type="hidden" class="form-control" th:field="*{id}"  />
+                <input type="hidden" class="form-control" th:field="*{resumeLink}"  />
+                <input type="hidden" th:field="*{jobId.id}" />
+                <input type="hidden" th:field="*{userId.id}" />
+
+                <!-- Nếu bạn có userId cần set nữa -->
+
+                <button class="btn btn-success mt-1" type="submit">
+                    <span th:if="${jobapplication.id == null}">Nộp hồ sơ ứng tuyển</span>
+                    <span th:unless="${jobapplication.id == null}">Nộp hồ sơ ứng tuyển</span>
+                </button>
+            </div>
+        </form>
+
+        <!--<div th:replace="base :: footer"></div>-->
+
+
+    </main>
+</body>

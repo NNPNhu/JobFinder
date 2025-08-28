@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Thống Kê Doanh Thu</title>
+    <th:block th:replace="base::styles"></th:block>
+
+    <!-- Thêm thư viện Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div th:replace="base::header"></div>
+    <div class="container">
+        <h2 class="text-center text-info mt-1">THỐNG KÊ DOANH THU</h2>
+
+        <!-- Form chọn thời gian -->
+        <form th:action="@{/stats/revenue}" method="post">
+            <label for="time">Chọn loại thời gian:</label>
+            <select id="time" name="time">
+                <option value="MONTH" th:selected="${selectedTime == 'MONTH'}">Tháng</option>
+                <option value="WEEK" th:selected="${selectedTime == 'WEEK'}">Tuần</option>
+                <option value="DAY" th:selected="${selectedTime == 'DAY'}">Ngày</option>
+            </select>
+
+            <label for="year">Chọn năm:</label>
+            <input type="number" id="year" name="year" th:value="${selectedYear}" required />
+
+            <button type="submit" class="btn btn-primary">Xem thống kê</button>
+        </form>
+
+        <!-- Hiển thị dữ liệu -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Thời gian</th>
+                    <th>Số lượng Job</th>
+                    <th>Candidate</th>
+                    <th>Employer</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="row : ${stats}">
+                    <td th:text="${row[0]}"></td>
+                    <td th:text="${row[1]}"></td>
+                    <td th:text="${row[2]}"></td>
+                    <td th:text="${row[3]}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Biểu đồ -->
+        <canvas id="revenueChart"></canvas>
+
+        <script th:inline="javascript">
+            let data = /*[[${stats}]]*/ [];
+
+            console.log("Dữ liệu đã xử lý:", data); // 🔎 Kiểm tra trên Console
+
+            if (data.length > 0) {
+                let labels = data.map(row => row.time); // Thời gian
+                let jobCounts = data.map(row => row.jobCount); // Số lượng Job
+                let candidateCounts = data.map(row => row.candidateCount); // Số lượng Candidate
+                let employerCounts = data.map(row => row.employerCount); // Số lượng Employer
+
+                let ctx = document.getElementById("revenueChart").getContext("2d");
+                new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {label: "Số lượng Job", data: jobCounts, backgroundColor: "blue"},
+                            {label: "Candidate", data: candidateCounts, backgroundColor: "green"},
+                            {label: "Employer", data: employerCounts, backgroundColor: "orange"}
+                        ]
+                    },
+                    options: {responsive: true, scales: {y: {beginAtZero: true}}}
+                });
+            } else {
+                document.getElementById("revenueChart").style.display = "none"; // Ẩn nếu không có dữ liệu
+            }
+        </script>
+
+
+
+</body>
+</html>

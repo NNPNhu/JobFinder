@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh Sách Phản Hồi</title>
+    <th:block th:replace="base::styles"></th:block>
+</head>
+<body>
+    <div th:replace="base::header"></div>
+    <div class="container">
+        <h2 class="text-center text-info mt-1">DANH SÁCH PHẢN HỒI</h2>
+
+        <!-- Hiển thị thông báo lỗi nếu có -->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <!-- Nếu có phản hồi -->
+        <th:block th:if="${feedbacks != null and feedbacks.size() > 0}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Người đánh giá</th>
+                        <th>Mức đánh giá</th>
+                        <th>Nhận xét</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="feedback : ${feedbacks}">
+                        <td th:text="${feedback.id}"></td>
+                        <td th:text="${feedback.fromUserId.lastName + ' ' + feedback.fromUserId.firstName}"></td>
+                        <td th:text="${feedback.rating}"></td>
+                        <td th:text="${feedback.comment}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </th:block>
+
+        <!-- Nếu không có phản hồi nào -->
+        <th:block th:unless="${feedbacks != null and feedbacks.size() > 0}">
+            <p class="text-center text-warning">⚠ Không có phản hồi nào!</p>
+        </th:block>
+
+        <!-- Nút quay lại -->
+        <div class="text-center mt-3">
+            <a th:href="@{/users/workedWith}" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </div>
+</body>
+</html>

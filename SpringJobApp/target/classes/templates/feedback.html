@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Người Dùng Đã Làm Việc Cùng</title>
+    <th:block th:replace="base::styles"></th:block>
+</head>
+<body>
+    <div th:replace="base::header"></div>
+    <div class="container">
+        <h2 class="text-center text-info mt-1">NGƯỜI DÙNG ĐÃ LÀM VIỆC CÙNG</h2>
+
+        <!-- Hiển thị thông báo lỗi nếu có -->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <!-- Nếu có danh sách user -->
+        <th:block th:if="${workedUsers != null and workedUsers.size() > 0}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Họ và tên</th>
+                        <th>Email</th>
+                        <th>Vai trò</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${workedUsers}">
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.lastName + ' ' + user.firstName}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td th:text="${user.role}"></td>
+                        <td>
+                            <a th:href="@{/feedback/add/{id}(id=${user.id})}" class="btn btn-warning">Đánh giá</a>  
+                            <a th:href="@{/feedback/user/{id}(id=${user.id})}" class="btn btn-primary">Xem đánh giá</a>                        </td>
+                        
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </th:block>
+
+        <!-- Nếu không có dữ liệu -->
+        <th:block th:unless="${workedUsers != null and workedUsers.size() > 0}">
+            <p class="text-center text-warning">⚠ Không có người dùng nào!</p>
+        </th:block>
+    </div>
+</body>
+</html>

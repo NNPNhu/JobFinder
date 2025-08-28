@@ -1,0 +1,144 @@
+<!--<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Danh sách đơn ứng tuyển</title>
+    <th:block th:replace="base::styles"></th:block>
+</head>
+<body>
+    <div th:replace="base::header"></div>
+    <div class="container">
+        <h2 class="text-center text-info mt-1">DANH SÁCH ĐƠN ỨNG TUYỂN</h2>
+
+         Hiển thị thông báo lỗi nếu có 
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+         Nếu có đơn ứng tuyển 
+        <th:block th:if="${applications != null and applications.size() > 0}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Công việc</th>
+                        <th>Ứng viên</th>
+                        <th>Thư giới thiệu</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="app, iterStat : ${applications}" th:if="${app.status != T(com.ntth.pojo.JobApplication.Status).REJECTED}">
+                        <td th:text="${iterStat.index + 1}"></td>
+                        <td th:text="${app.jobId.title}"></td>
+                        <td th:text="${app.userId.lastName + ' ' + app.userId.firstName}"></td>
+                        <td th:text="${app.coverLetter}"></td>
+                        <td th:text="${app.status}"></td>
+                        <td>
+                             Nút Chấp nhận 
+                            <form th:action="@{/jobapplications/accept/{id}(id=${app.id})}" method="post">
+                                <button type="submit" class="btn btn-success">Chấp nhận</button>
+                            </form>
+
+                             Nút Từ chối 
+                            <form th:action="@{/jobapplications/reject/{id}(id=${app.id})}" method="post">
+                                <button type="submit" class="btn btn-danger">Từ chối</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </th:block>
+
+         Nếu không có đơn ứng tuyển 
+        <th:block th:unless="${applications != null and applications.size() > 0}">
+            <p class="text-center text-warning">⚠ Không có đơn ứng tuyển nào!</p>
+        </th:block>
+    </div>
+    <script th:src="@{/js/reject.js}"></script>
+
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Danh sách đơn ứng tuyển</title>
+    <th:block th:replace="base::styles"></th:block>
+</head>
+<body>
+    <div th:replace="base::header"></div>
+    <div class="container">
+        <h2 class="text-center text-info mt-1">DANH SÁCH ĐƠN ỨNG TUYỂN</h2>
+
+        <!-- Hiển thị thông báo lỗi nếu có -->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <!-- Nếu có đơn ứng tuyển -->
+        <th:block th:if="${applications != null and applications.size() > 0}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Ứng viên</th>
+                        <th>Công việc</th>
+                        <th>Mô tả</th>
+                        <th>Kỹ năng</th>
+                        <th>Mức lương</th>
+                        <th>Địa điểm</th>
+                        <th>Thư giới thiệu</th>
+                        <th>Resume</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="app, iterStat : ${applications}" th:if="${app.status != T(com.ntth.pojo.JobApplication.Status).REJECTED}">
+                        <td th:text="${iterStat.index + 1}"></td>
+
+                        <!-- Chỉ hiển thị tên ứng viên nếu người đăng nhập là Employer -->
+                        <td th:text="${app.userId.lastName + ' ' + app.userId.firstName}"></td>
+
+                        <!-- Hiển thị thông tin công việc -->
+                        <td th:text="${app.jobId.title}"></td>
+                        <td th:text="${app.jobId.description}"></td>
+                        <td th:text="${app.jobId.skills}"></td>
+                        <td th:text="'Từ ' + ${app.jobId.salaryFrom} + ' đến ' + ${app.jobId.salaryTo}"></td>
+                        <td>
+                            <span th:text="${app.jobId.location}"></span>
+                            <a th:if="${app.jobId.locationLink != null}" th:href="${app.jobId.locationLink}" target="_blank">Xem bản đồ</a>
+                        </td>
+
+                        <!-- Hiển thị thư giới thiệu -->
+                        <td th:text="${app.coverLetter}"></td>
+
+                        <!-- Hiển thị Resume Link -->
+                        <td>
+                            <img th:src="${app.resumeLink}" width="200" />
+                        </td>
+
+                        <!-- Hiển thị trạng thái ứng tuyển -->
+                        <td th:text="${app.status}"></td>
+
+                        <td>
+                            <form th:action="@{/jobapplications/accept/{id}(id=${app.id})}" method="post">
+                                <button type="submit" class="btn btn-success">Chấp nhận</button>
+                            </form>
+
+                            <form th:action="@{/jobapplications/reject/{id}(id=${app.id})}" method="post">
+                                <button type="submit" class="btn btn-danger">Từ chối</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </th:block>
+
+        <!-- Nếu không có đơn ứng tuyển -->
+        <th:block th:unless="${applications != null and applications.size() > 0}">
+            <p class="text-center text-warning">⚠ Không có đơn ứng tuyển nào!</p>
+        </th:block>
+    </div>
+    <script th:src="@{/js/reject.js}"></script>
+
+</body>
+</html>

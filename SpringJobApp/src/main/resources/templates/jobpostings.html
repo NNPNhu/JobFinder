@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Đăng bài tuyển dụng</title>
+    <th:block th:replace="base::styles"></th:block>
+</head>
+<body>
+    <div th:replace="base::header"></div>
+    <div class="container">
+        <!--        <h2 th:text="${jobpostings.id != null} ? 'Chỉnh sửa bài đăng' : 'Tạo bài đăng mới'"></h2>-->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <form th:action="@{/add}" th:object="${jobpostings}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:field="*{companyId.id}"/> <!-- Thêm trường ẩn cho companyId -->
+            <div class="mb-3">
+                <label class="form-label">Tiêu đề:</label>
+                <input type="text" class="form-control" th:field="*{title}" required/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Mô tả:</label>
+                <textarea class="form-control" th:field="*{description}" rows="5"></textarea>
+                <div th:errors="*{description}" class="text-danger"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Kỹ năng:</label>
+                <input type="text" class="form-control" th:field="*{skills}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Lương tối thiểu:</label>
+                <input type="number" class="form-control" th:field="*{salaryFrom}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Lương tối đa:</label>
+                <input type="number" class="form-control" th:field="*{salaryTo}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Thời gian làm việc:</label>
+                <input type="text" class="form-control" th:field="*{workingTime}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Địa điểm:</label>
+                <input type="text" class="form-control" th:field="*{location}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Link địa điểm:</label>
+                <input type="text" class="form-control" th:field="*{locationLink}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Danh mục:</label>
+                <select class="form-control" th:field="*{categoryId.id}" required>
+                    <option value="">Chọn danh mục</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}"></option>
+                </select>
+                <div th:errors="*{categoryId}" class="text-danger"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a th:href="@{/}" class="btn btn-secondary">Hủy</a>
+        </form>
+    </div>
+</body>
+</html>

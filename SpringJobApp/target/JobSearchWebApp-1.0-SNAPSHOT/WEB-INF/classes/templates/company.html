@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Danh Sách Công Ty</title>
+    <th:block th:replace="base::styles"></th:block>
+</head>
+<body>
+    <div th:replace="base::header"></div>
+    <div class="container">
+        <h2 class="text-center text-info mt-1">DANH SÁCH CÔNG TY</h2>
+
+        <!-- Hiển thị thông báo lỗi nếu có -->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <!-- Nếu có công ty -->
+        <th:block th:if="${companies != null and companies.size() > 0}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên công ty</th>
+                        <th>Mã số thuế</th>
+                        <th>Địa chỉ</th>
+                        <th>Website</th>
+                        <th>Hình ảnh</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="company : ${companies}">
+                        <td th:text="${company.id}"></td>
+                        <td th:text="${company.name}"></td>
+                        <td th:text="${company.taxCode}"></td>
+                        <td th:text="${company.address}"></td>
+                        <td>
+                            <a th:if="${company.website != null}" th:href="${company.website}" target="_blank">Truy cập website</a>
+                        </td>
+                        <td>
+                            <img th:if="${company.image1 != null}" th:src="${company.image1}" width="60" />
+                            <img th:if="${company.image2 != null}" th:src="${company.image2}" width="60" />
+                            <img th:if="${company.image3 != null}" th:src="${company.image3}" width="60" />
+                        </td>
+                        <!--                        <td>
+                                                    <form th:action="@{/follow/add/{id}(id=${company.id})}" method="post">
+                                                        <button type="submit" class="btn btn-info">Theo dõi</button>
+                                                    </form>                       
+                                                </td>-->
+
+                        <td>
+                <th:block th:if="${followedCompanies != null and followedCompanies.contains(company.id)}">
+                    <button class="btn btn-secondary" disabled>Đã theo dõi</button>
+                </th:block>
+                <th:block th:unless="${followedCompanies != null and followedCompanies.contains(company.id)}">
+                    <form th:action="@{/follow/add/{id}(id=${company.id})}" method="post">
+                        <button type="submit" class="btn btn-info">Theo dõi</button>
+                    </form>
+                </th:block>
+                </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
+
+        <!-- Nếu không có công ty nào -->
+        <th:block th:unless="${companies != null and companies.size() > 0}">
+            <p class="text-center text-warning">⚠ Chưa có công ty nào!</p>
+        </th:block>
+
+        <!--         Form thêm công ty 
+                <h3 class="mt-4">Thêm công ty mới</h3>
+                <form th:action="@{/companies/add}" th:object="${company}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Tên công ty:</label>
+                        <input type="text" class="form-control" th:field="*{name}" required/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mã số thuế:</label>
+                        <input type="text" class="form-control" th:field="*{taxCode}" required/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Địa chỉ:</label>
+                        <input type="text" class="form-control" th:field="*{address}" required/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Website:</label>
+                        <input type="text" class="form-control" th:field="*{website}"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tải ảnh đại diện:</label>
+                        <input type="file" class="form-control" th:field="*{image1}"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Thêm công ty</button>
+                </form>-->
+    </div>
+</body>
+</html>

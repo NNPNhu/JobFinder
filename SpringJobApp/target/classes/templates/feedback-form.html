@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Đánh Giá Người Dùng</title>
+    <th:block th:replace="base::styles"></th:block>
+</head>
+<body>
+    <div th:replace="base::header"></div>
+    <div class="container">
+        <h2 class="text-center text-info mt-1">ĐÁNH GIÁ NGƯỜI DÙNG</h2>
+
+        <!-- Hiển thị thông báo lỗi nếu có -->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <!-- Form đánh giá -->
+        <form th:action="@{/feedback/add/{toUserId}(toUserId=${toUserId})}" th:object="${feedback}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Người được đánh giá:</label>
+                <input type="text" class="form-control" th:value="${toUserId}" readonly/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Mức đánh giá (1-5):</label>
+                <select class="form-control" th:field="*{rating}" required>
+                    <option value="1">1 - Tệ</option>
+                    <option value="2">2 - Dưới trung bình</option>
+                    <option value="3">3 - Trung bình</option>
+                    <option value="4">4 - Tốt</option>
+                    <option value="5">5 - Xuất sắc</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nhận xét:</label>
+                <textarea class="form-control" th:field="*{comment}" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+        </form>
+    </div>
+</body>
+</html>
